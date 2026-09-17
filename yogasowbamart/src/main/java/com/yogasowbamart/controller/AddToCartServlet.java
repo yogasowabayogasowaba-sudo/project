@@ -18,19 +18,14 @@ public class AddToCartServlet extends HttpServlet {
             throws ServletException, IOException {
         
         try {
-            // 1. Check User Session
             HttpSession session = request.getSession(false);
             if (session == null || session.getAttribute("userId") == null) {
                 response.sendRedirect("index.html");
                 return;
             }
-
-            // 2. Get userId from Session and parameters from request
             int userId = (Integer) session.getAttribute("userId");
             int productId = Integer.parseInt(request.getParameter("productId"));
             int quantity = Integer.parseInt(request.getParameter("quantity"));
-
-            // 3. Call DAO to insert into database
             CartDAO cartDAO = new CartDAO();
             boolean isAdded = cartDAO.addToCart(userId, productId, quantity);
 
