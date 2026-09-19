@@ -2,8 +2,8 @@ package com.yogasowbamart.controller;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -19,7 +19,7 @@ public class LoginServlet extends HttpServlet {
 
         if (email != null && email.endsWith("@gmail.com")) {
             HttpSession session = request.getSession();
-            // userId-க்கு பதிலாக email-ஐ செஷனில் சேமிக்கிறோம்
+            // email-ஐ செஷனில் சேமிக்கிறோம்
             session.setAttribute("userEmail", email);
             response.sendRedirect(request.getContextPath() + "/home.html");
         } else {

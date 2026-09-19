@@ -57,6 +57,23 @@
             background-color: #0369a1;
         }
 
+        /* Alert Message Box */
+        .alert-box {
+            max-width: 1100px;
+            margin: 20px auto 0 auto;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            display: none;
+        }
+        .alert-success {
+            background-color: #d1e7dd;
+            color: #0f5132;
+            border: 1px solid #badbcc;
+            display: block;
+        }
+
         /* Container & Header */
         .main-container {
             max-width: 1100px;
@@ -143,9 +160,16 @@
     <div class="navbar">
         <h1>YogasowbaMart</h1>
         <div class="nav-links">
-            <a href="./products" class="cart-btn">🔍 Search Products</a>
-            <a href="./viewCart" class="cart-btn">🛒 View Cart</a>
+            <!-- காணாமல் போன இரண்டு பட்டன்கள் மீண்டும் சேர்க்கப்பட்டுள்ளன -->
+            <a href="products" class="cart-btn">🔍 Search Products</a>
+            <a href="viewCart" class="cart-btn">🛒 View Cart</a>
+            <a href="orderHistory" class="cart-btn">📦 My Orders</a>
         </div>
+    </div>
+
+    <!-- Success Message Alert -->
+    <div id="alertMessage" class="alert-box">
+        ✅ Product added successfully to your cart!
     </div>
 
     <!-- Main Content Area -->
@@ -160,8 +184,9 @@
                 <div class="product-info">
                     <div class="product-title">Sample Product A</div>
                     <div class="product-price">₹ 500</div>
-                    <form action="./addToCart" method="post">
-                        <input type="hidden" name="productId" value="101">
+                    <form action="addToCart" method="post">
+                        <input type="hidden" name="productName" value="Sample Product A">
+                        <input type="hidden" name="price" value="500">
                         <input type="hidden" name="quantity" value="1">
                         <button type="submit" class="add-btn">Add to Cart</button>
                     </form>
@@ -174,8 +199,9 @@
                 <div class="product-info">
                     <div class="product-title">Sample Product B</div>
                     <div class="product-price">₹ 750</div>
-                    <form action="./addToCart" method="post">
-                        <input type="hidden" name="productId" value="102">
+                    <form action="addToCart" method="post">
+                        <input type="hidden" name="productName" value="Sample Product B">
+                        <input type="hidden" name="price" value="750">
                         <input type="hidden" name="quantity" value="1">
                         <button type="submit" class="add-btn">Add to Cart</button>
                     </form>
@@ -184,6 +210,23 @@
 
         </div>
     </div>
+
+    <script>
+        // URL-ல் status=success வந்தால் மேலே மெசேஜைக் காட்டும் ஸ்கிரிப்ட்
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('status') === 'success') {
+            const alertBox = document.getElementById('alertMessage');
+            alertBox.classList.add('alert-success');
+            
+            // 3 விநாடிகளுக்குப் பிறகு மெசேஜ் தானாக மறைந்துவிடும்
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+                
+                // URL-ஐ க்ளீன் செய்ய (status=success என்பதை URL-ல் இருந்து நீக்க)
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }, 3000);
+        }
+    </script>
 
 </body>
 </html>
