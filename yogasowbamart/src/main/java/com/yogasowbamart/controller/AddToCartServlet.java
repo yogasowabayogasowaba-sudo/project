@@ -19,15 +19,17 @@ public class AddToCartServlet extends HttpServlet {
         
         try {
             HttpSession session = request.getSession(false);
-            if (session == null || session.getAttribute("userId") == null) {
+            if (session == null || session.getAttribute("userEmail") == null) {
                 response.sendRedirect("index.html");
                 return;
             }
-            int userId = (Integer) session.getAttribute("userId");
+            
+            String userEmail = (String) session.getAttribute("userEmail");
             int productId = Integer.parseInt(request.getParameter("productId"));
             int quantity = Integer.parseInt(request.getParameter("quantity"));
+            
             CartDAO cartDAO = new CartDAO();
-            boolean isAdded = cartDAO.addToCart(userId, productId, quantity);
+            boolean isAdded = cartDAO.addToCart(userEmail, productId, quantity);
 
             if (isAdded) {
                 response.sendRedirect("home.html?status=success");

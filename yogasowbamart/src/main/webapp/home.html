@@ -34,6 +34,12 @@
             color: #38bdf8;
         }
 
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
         .cart-btn {
             background-color: #0284c7;
             color: white;
@@ -136,7 +142,10 @@
     <!-- Header Navigation Bar -->
     <div class="navbar">
         <h1>YogasowbaMart</h1>
-        <a href="./viewCart" class="cart-btn">🛒 View Cart</a>
+        <div class="nav-links">
+            <a href="./products" class="cart-btn">🔍 Search Products</a>
+            <a href="./viewCart" class="cart-btn">🛒 View Cart</a>
+        </div>
     </div>
 
     <!-- Main Content Area -->

@@ -2,10 +2,7 @@ package com.yogasowbamart.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,13 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.yogasowbamart.dao.CartDAO;
+
 @WebServlet("/viewCart")
 public class ViewCartServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-
-    private String dbUrl = "jdbc:h2:~/yogasowbamart;DB_CLOSE_DELAY=-1";
-    private String dbUser = "sa";
-    private String dbPass = "";
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
@@ -28,51 +23,59 @@ public class ViewCartServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("userId") == null) {
+        if (session == null || session.getAttribute("userEmail") == null) {
             response.sendRedirect("index.html");
             return;
         }
 
-        int userId = (Integer) session.getAttribute("userId");
+        String userEmail = (String) session.getAttribute("userEmail");
 
-        out.println("<html><head><title>Your Cart - YogasowbaMart</title></head><body>");
-        out.println("<h2>Your Shopping Cart</h2>");
+        out.println("<html><head><title>Your Cart - YogasowbaMart</title>");
+        out.println("<style>");
+        out.println("body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; margin: 40px; }");
+        out.println("h2 { color: #1e293b; margin-bottom: 20px; }");
+        out.println("table { width: 100%; max-width: 800px; border-collapse: collapse; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; }");
+        out.println("th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #e2e8f0; }");
+        out.println("th { background-color: #1e293b; color: white; }");
+        out.println("tr:hover { background-color: #f1f5f9; }");
+        out.println(".btn { display: inline-block; margin-top: 20px; margin-right: 10px; text-decoration: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; }");
+        out.println(".btn-primary { background-color: #0284c7; color: white; }");
+        out.println(".btn-primary:hover { background-color: #0369a1; }");
+        out.println(".btn-success { background-color: #16a34a; color: white; }");
+        out.println(".btn-success:hover { background-color: #15803d; }");
+        out.println("</style>");
+        out.println("</head><body>");
+        
+        out.println("<h2>Your Shopping Cart (" + userEmail + ")</h2>");
 
-        String query = "SELECT p.name, p.price, c.quantity FROM cart_items c " +
-                       "JOIN products p ON c.product_id = p.id WHERE c.user_id = ?";
+        CartDAO cartDAO = new CartDAO();
+        List<String[]> cartItems = cartDAO.getCartItems(userEmail);
 
-        try {
-            Class.forName("org.h2.Driver");
-            try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPass);
-                 PreparedStatement ps = conn.prepareStatement(query)) {
-                
-                ps.setInt(1, userId);
-                ResultSet rs = ps.executeQuery();
+        out.println("<table><tr><th>Product Name</th><th>Price (₹)</th><th>Quantity</th></tr>");
 
-                out.println("<table border='1'><tr><th>Product</th><th>Price</th><th>Quantity</th></tr>");
-                boolean hasItems = false;
-
-                while (rs.next()) {
-                    hasItems = true;
-                    out.println("<tr>");
-                    out.println("<td>" + rs.getString("name") + "</td>");
-                    out.println("<td>" + rs.getDouble("price") + "</td>");
-                    out.println("<td>" + rs.getInt("quantity") + "</td>");
-                    out.println("</tr>");
-                }
-
-                if (!hasItems) {
-                    out.println("<tr><td colspan='3'>Your cart is empty!</td></tr>");
-                }
-
-                out.println("</table>");
-                out.println("<br><a href='home.html'>Continue Shopping</a>");
+        if (cartItems.isEmpty()) {
+            out.println("<tr><td colspan='3' style='text-align: center; color: #64748b;'>Your cart is empty!</td></tr>");
+        } else {
+            for (String[] item : cartItems) {
+                out.println("<tr>");
+                out.println("<td>" + item[0] + "</td>");
+                out.println("<td>" + item[1] + "</td>");
+                out.println("<td>" + item[2] + "</td>");
+                out.println("</tr>");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            out.println("<p>Error loading cart items.</p>");
         }
 
+        out.println("</table>");
+        
+        // Navigation Buttons: Continue Shopping & Proceed to Checkout
+        out.println("<br>");
+        out.println("<a href='home.html' class='btn btn-primary'>← Continue Shopping</a>");
+        
+        // கார்ட்டில் பொருட்கள் இருந்தால் மட்டும் Checkout பட்டனை காட்டுவது நலம்
+        if (!cartItems.isEmpty()) {
+            out.println("<a href='checkout' class='btn btn-success'>Proceed to Checkout →</a>");
+        }
+        
         out.println("</body></html>");
     }
 }
