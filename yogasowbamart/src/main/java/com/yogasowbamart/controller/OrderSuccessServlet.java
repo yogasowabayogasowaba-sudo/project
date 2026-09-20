@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import com.yogasowbamart.dao.OrderDAO;
 
 @WebServlet("/orderSuccess")
 public class OrderSuccessServlet extends HttpServlet {
@@ -22,18 +21,11 @@ public class OrderSuccessServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("userEmail") == null) {
-            response.sendRedirect("index.html");
+            response.sendRedirect("login.html");
             return;
         }
 
         String userEmail = (String) session.getAttribute("userEmail");
-
-        // டேட்டாபேஸில் ஆர்டரைச் சேமிக்க OrderDAO-வைப் பயன்படுத்துதல்
-        // (தற்காலிகமாக ஒரு சாம்பிள் ஆர்டர் அல்லது கார்ட்டில் உள்ள விவரங்களைச் சேமிக்கலாம்)
-        OrderDAO orderDAO = new OrderDAO();
-        // இங்கே product name மற்றும் quantity-ஐ உங்கள் கார்ட் அல்லது ரெக்வெஸ்ட் மூலம் பெறலாம்
-        // உதாரணமாக ஒரு டீஃபால்ட் தயாரிப்பை சேமிக்க:
-        orderDAO.saveOrder(userEmail, "Traditional Silk Saree", 1, 1500.00);
 
         out.println("<html><head><title>Order Success - YogasowbaMart</title>");
         out.println("<style>");
@@ -50,9 +42,14 @@ public class OrderSuccessServlet extends HttpServlet {
         out.println("<h2>Order Placed Successfully! 🎉</h2>");
         out.println("<p>Thank you for shopping with us, <strong>" + userEmail + "</strong>.</p>");
         out.println("<p>Your order has been placed successfully and saved to the database, and will be delivered soon.</p>");
-        out.println("<a href='home.html' class='btn'>Return to Home</a>");
+        out.println("<a href='orderHistory' class='btn'>View My Orders</a>");
         out.println("</div>");
         
         out.println("</body></html>");
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        doPost(request, response);
     }
 }

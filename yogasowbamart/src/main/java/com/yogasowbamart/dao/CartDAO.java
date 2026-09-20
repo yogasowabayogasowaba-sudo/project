@@ -9,12 +9,12 @@ import java.util.List;
 
 public class CartDAO {
 
+    // கன்ஸ்ட்ரக்டர்: 'cart' டேபிள் இல்லாவிட்டால் புதியதாக உருவாக்குகிறது
     public CartDAO() {
         try (Connection conn = DBConnection.getConnection();
              Statement stmt = conn.createStatement()) {
             
-            // டேபிள் இல்லாவிட்டால் மட்டும் உருவாக்குகிறது (பழைய டேபிள் அழியாது)
-            String createTableQuery = "CREATE TABLE IF NOT EXISTS cart_items (" +
+            String createTableQuery = "CREATE TABLE IF NOT EXISTS cart (" +
                     "cart_id INT AUTO_INCREMENT PRIMARY KEY, " +
                     "user_email VARCHAR(255) NOT NULL, " +
                     "product_name VARCHAR(255) NOT NULL, " +
@@ -27,8 +27,9 @@ public class CartDAO {
         }
     }
 
+    // கார்ட்டில் பொருளைச் சேர்க்கும் மெத்தட்
     public boolean addToCart(String userEmail, String productName, double price, int quantity) {
-        String query = "INSERT INTO cart_items (user_email, product_name, price, quantity) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO cart (user_email, product_name, price, quantity) VALUES (?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             
@@ -45,9 +46,10 @@ public class CartDAO {
         return false;
     }
 
+    // குறிப்பிட்ட பயனரின் கார்ட்டில் உள்ள பொருட்களைப் பெறும் மெத்தட்
     public List<String[]> getCartItems(String userEmail) {
         List<String[]> cartList = new ArrayList<>();
-        String query = "SELECT product_name, price, quantity FROM cart_items WHERE user_email = ?";
+        String query = "SELECT product_name, price, quantity FROM cart WHERE user_email = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             
@@ -68,8 +70,9 @@ public class CartDAO {
         return cartList;
     }
 
+    // ஆர்டர் செய்த பிறகு கார்ட்டை க்ளியர் செய்யும் மெத்தட்
     public boolean clearCart(String userEmail) {
-        String query = "DELETE FROM cart_items WHERE user_email = ?";
+        String query = "DELETE FROM cart WHERE user_email = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             

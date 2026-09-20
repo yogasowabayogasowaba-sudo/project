@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import com.yogasowbamart.dao.Order;
+import com.yogasowbamart.model.Order;
 import com.yogasowbamart.dao.OrderDAO;
 
 @WebServlet("/orderHistory")
@@ -52,7 +52,7 @@ public class OrderHistoryServlet extends HttpServlet {
         out.println("<h2>My Order History 📦</h2>");
         out.println("<p>Logged in as: <strong>" + userEmail + "</strong></p>");
         
-        if (orders.isEmpty()) {
+        if (orders == null || orders.isEmpty()) {
             out.println("<p style='text-align:center; color:#64748b; margin-top:30px;'>You have not placed any orders yet.</p>");
         } else {
             out.println("<table>");
