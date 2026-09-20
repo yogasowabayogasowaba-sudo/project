@@ -19,7 +19,6 @@ public class LoginServlet extends HttpServlet {
 
         if (email != null && email.endsWith("@gmail.com")) {
             HttpSession session = request.getSession();
-            // email-ஐ செஷனில் சேமிக்கிறோம்
             session.setAttribute("userEmail", email);
             response.sendRedirect(request.getContextPath() + "/home.html");
         } else {

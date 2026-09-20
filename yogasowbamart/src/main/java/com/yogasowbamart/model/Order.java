@@ -8,16 +8,12 @@ public class Order {
     private double totalAmount;
     private String status;
     private String orderDate;
-
-    // Getters and Setters for orderId
     public int getOrderId() {
         return orderId;
     }
     public void setOrderId(int orderId) {
         this.orderId = orderId;
     }
-
-    // Getters and Setters for productName
     public String getProductName() {
         return productName;
     }
@@ -25,7 +21,7 @@ public class Order {
         this.productName = productName;
     }
 
-    // Getters and Setters for price
+    
     public double getPrice() {
         return price;
     }
@@ -33,7 +29,7 @@ public class Order {
         this.price = price;
     }
 
-    // Getters and Setters for quantity
+    
     public int getQuantity() {
         return quantity;
     }
@@ -41,7 +37,7 @@ public class Order {
         this.quantity = quantity;
     }
 
-    // Getters and Setters for totalAmount
+   
     public double getTotalAmount() {
         return totalAmount;
     }
@@ -49,7 +45,7 @@ public class Order {
         this.totalAmount = totalAmount;
     }
 
-    // Getters and Setters for status
+   
     public String getStatus() {
         return status;
     }
@@ -57,7 +53,7 @@ public class Order {
         this.status = status;
     }
 
-    // Getters and Setters for orderDate
+   
     public String getOrderDate() {
         return orderDate;
     }

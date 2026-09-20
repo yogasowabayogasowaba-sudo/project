@@ -18,9 +18,7 @@ public class ProductDAO {
         try {
             Class.forName("org.h2.Driver");
             try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPass);
-                 Statement stmt = conn.createStatement()) {
-                
-                // பழைய டேபிளை நீக்கிவிட்டு புதிய கால்களுடன் டேபிளை உருவாக்குதல்
+                 Statement stmt = conn.createStatement()){
                 stmt.execute("DROP TABLE IF EXISTS products");
                 
                 stmt.execute("CREATE TABLE products (" +
@@ -29,8 +27,6 @@ public class ProductDAO {
                         "description VARCHAR(500), " +
                         "price DOUBLE, " +
                         "category VARCHAR(100))");
-
-                // சாம்பிள் ப்ராடக்ட்டுகள்
                 stmt.execute("MERGE INTO products (id, name, description, price, category) KEY(id) VALUES (101, 'Laptop', 'High performance laptop', 45000, 'Electronics')");
                 stmt.execute("MERGE INTO products (id, name, description, price, category) KEY(id) VALUES (102, 'Running Shoes', 'Comfortable sports shoes', 1500, 'Footwear')");
                 stmt.execute("MERGE INTO products (id, name, description, price, category) KEY(id) VALUES (103, 'Smartphone', 'Latest 5G smartphone', 18000, 'Electronics')");

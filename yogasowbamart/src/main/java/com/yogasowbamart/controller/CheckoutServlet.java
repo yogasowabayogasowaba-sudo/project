@@ -28,12 +28,9 @@ public class CheckoutServlet extends HttpServlet {
 
         String userEmail = (String) session.getAttribute("userEmail");
         OrderDAO orderDAO = new OrderDAO();
-        
-        // கார்ட்டில் உள்ளதை ஆர்டராக மாற்றுதல்
         boolean isOrdered = orderDAO.placeOrder(userEmail);
 
         if (isOrdered) {
-            // ஆர்டர் வெற்றி பெற்றால் Success Page-ஐ நேரடியாகக் காட்டுதல்
             out.println("<html><head><title>Order Successful</title>");
             out.println("<style>");
             out.println("body { font-family: Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 40px; text-align: center; }");
@@ -54,7 +51,7 @@ public class CheckoutServlet extends HttpServlet {
             
             out.println("</body></html>");
         } else {
-            // கார்ட் காலியாக இருந்தால் அல்லது பிழை ஏற்பட்டால்
+
             response.sendRedirect(request.getContextPath() + "/viewCart");
         }
     }

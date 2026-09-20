@@ -39,8 +39,6 @@ public class ProductServlet extends HttpServlet {
         out.println("</select> ");
         out.println("<input type='submit' value='Filter'>");
         out.println("</form><hr>");
-
-        // Action காலம் நீக்கப்பட்டு, வெறும் விவரங்கள் மட்டும் இருக்கும் டேபிள்
         out.println("<table border='1'><tr><th>ID</th><th>Name</th><th>Description</th><th>Price</th><th>Category</th></tr>");
         
         if (products.isEmpty()) {

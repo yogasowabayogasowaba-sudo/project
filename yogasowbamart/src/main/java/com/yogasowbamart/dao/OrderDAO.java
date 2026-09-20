@@ -9,8 +9,6 @@ import java.util.List;
 import com.yogasowbamart.model.Order;
 
 public class OrderDAO {
-
-    // கன்ஸ்ட்ரக்டர்: டேபிள் இல்லையென்றால் மட்டும் புதியதாக உருவாக்குகிறது (பழைய டேபிளை டெலிட் செய்யாது)
     public OrderDAO() {
         try (Connection conn = DBConnection.getConnection();
              Statement stmt = conn.createStatement()) {
@@ -30,14 +28,12 @@ public class OrderDAO {
             e.printStackTrace();
         }
     }
-
-    // கார்ட்டில் உள்ள பொருட்களை ஆர்டராக மாற்றி டேட்டாபேஸில் சேமிக்கும் மெத்தட்
     public boolean placeOrder(String userEmail) {
         CartDAO cartDAO = new CartDAO();
         List<String[]> cartItems = cartDAO.getCartItems(userEmail);
         
         if (cartItems.isEmpty()) {
-            return false; // கார்ட் காலியாக இருந்தால் ஆர்டர் செய்ய முடியாது
+            return false;
         }
 
         String insertQuery = "INSERT INTO orders (user_email, product_name, price, quantity, total_amount, status) VALUES (?, ?, ?, ?, ?, ?)";
@@ -59,9 +55,9 @@ public class OrderDAO {
                 ps.addBatch();
             }
             
-            ps.executeBatch(); // அனைத்து பொருட்களையும் ஒட்டுமொத்தமாக சேமித்தல்
+            ps.executeBatch();
             
-            // ஆர்டர் வெற்றிகரமாக முடிந்ததும் கார்ட்டை காலியாக்குதல்
+        
             cartDAO.clearCart(userEmail);
             return true;
             
@@ -70,8 +66,6 @@ public class OrderDAO {
         }
         return false;
     }
-
-    // குறிப்பிட்ட பயனரின் ஆர்டர் வரலாற்றைப் பெறும் மெத்தட்
     public List<Order> getOrdersByUser(String userEmail) {
         List<Order> orderList = new ArrayList<>();
         String query = "SELECT order_id, product_name, price, quantity, total_amount, status, order_date FROM orders WHERE user_email = ? ORDER BY order_date DESC";

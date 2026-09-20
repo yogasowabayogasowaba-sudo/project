@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YogasowbaMart - Home</title>
     <style>
-        /* பொதுவான ஸ்டைலிங் */
+        
         * {
             box-sizing: border-box;
             margin: 0;
@@ -18,7 +18,7 @@
             color: #333;
         }
 
-        /* நேவிகேஷன் பார் (Navigation Bar) */
+        
         .navbar {
             background-color: #1e293b;
             color: white;
@@ -58,7 +58,7 @@
             background-color: #0369a1;
         }
 
-        /* பொருள் சேர்க்கப்படும் போது மேலே காட்டும் அலர்ட் மெசேஜ் பாக்ஸ் */
+        
         .alert-box {
             max-width: 1100px;
             margin: 20px auto 0 auto;
@@ -75,7 +75,7 @@
             display: block;
         }
 
-        /* பிரதான கண்டெயினர் மற்றும் கார்டு டிசைன் */
+        
         .main-container {
             max-width: 1100px;
             margin: 30px auto;
@@ -155,7 +155,7 @@
 </head>
 <body>
 
-    <!-- நேவிகேஷன் மெனு பகுதி -->
+
     <div class="navbar">
         <h1>YogasowbaMart</h1>
         <div class="nav-links">
@@ -165,18 +165,18 @@
         </div>
     </div>
 
-    <!-- பொருள் வெற்றிகரமாகச் சேர்க்கப்பட்டதைக் காட்டும் மெசேஜ் பாக்ஸ் -->
+    
     <div id="alertMessage" class="alert-box">
         ✅ Product added successfully to your cart!
     </div>
 
-    <!-- பிரதான தயாரிப்புகள் பகுதி -->
+
     <div class="main-container">
         <h2 class="section-title">Featured Products</h2>
 
         <div class="product-grid">
             
-            <!-- தயாரிப்பு 1 (Product 1) -->
+            
             <div class="product-card">
                 <img src="https://via.placeholder.com/200x180/0284c7/ffffff?text=Product+101" alt="Product 101" class="product-img">
                 <div class="product-info">
@@ -191,7 +191,7 @@
                 </div>
             </div>
 
-            <!-- தயாரிப்பு 2 (Product 2) -->
+
             <div class="product-card">
                 <img src="https://via.placeholder.com/200x180/16a34a/ffffff?text=Product+102" alt="Product 102" class="product-img">
                 <div class="product-info">
@@ -209,15 +209,15 @@
         </div>
     </div>
 
-    <!-- ஜாவாஸ்கிரிப்ட் மூலம் வெற்றிச் செய்தியைக் கையாளுதல் -->
+    
     <script>
-        // URL-ல் status=success உள்ளதா எனச் சரிபார்த்து மெசேஜைக் காட்டுதல்
+
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('status') === 'success') {
             const alertBox = document.getElementById('alertMessage');
             alertBox.classList.add('alert-success');
             
-            // 3 விநாடிகளுக்குப் பிறகு மெசேஜை மறைத்து URL-ஐ சுத்தம் செய்தல்
+
             setTimeout(() => {
                 alertBox.style.display = 'none';
                 window.history.replaceState({}, document.title, window.location.pathname);

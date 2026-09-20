@@ -30,8 +30,6 @@ public class OrderHistoryServlet extends HttpServlet {
 
         String userEmail = (String) session.getAttribute("userEmail");
         OrderDAO orderDAO = new OrderDAO();
-        
-        // வாடிக்கையாளருடைய ஆர்டர்களை மட்டும் எடுக்க
         List<Order> orders = orderDAO.getOrdersByUser(userEmail);
 
         out.println("<html><head><title>My Orders - YogasowbaMart</title>");

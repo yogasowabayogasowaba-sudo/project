@@ -39,6 +39,8 @@ public class ViewCartServlet extends HttpServlet {
         out.println("th { background-color: #2c3e50; color: white; }");
         out.println(".btn-checkout { background-color: #16a34a; color: white; padding: 12px 25px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 20px; }");
         out.println(".btn-checkout:hover { background-color: #15803d; }");
+        out.println(".btn-remove { background-color: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }");
+        out.println(".btn-remove:hover { background-color: #dc2626; }");
         out.println("</style></head><body>");
 
         out.println("<div class='container'>");
@@ -48,17 +50,23 @@ public class ViewCartServlet extends HttpServlet {
             out.println("<p style='text-align:center; color: #666; margin-top: 30px;'>Your cart is currently empty.</p>");
         } else {
             out.println("<table>");
-            out.println("<tr><th>Product Name</th><th>Price (₹)</th><th>Quantity</th></tr>");
+            out.println("<tr><th>Product Name</th><th>Price (₹)</th><th>Quantity</th><th>Action</th></tr>");
             for (String[] item : cartItems) {
                 out.println("<tr>");
                 out.println("<td>" + item[0] + "</td>");
                 out.println("<td>" + item[1] + "</td>");
                 out.println("<td>" + item[2] + "</td>");
+                out.println("<td>");
+                // Remove பட்டனுக்கான ஃபார்ம்
+                out.println("<form action='" + request.getContextPath() + "/removeCart' method='post' style='margin:0;'>");
+                out.println("<input type='hidden' name='productName' value='" + item[0] + "'>");
+                out.println("<button type='submit' class='btn-remove'>Remove</button>");
+                out.println("</form>");
+                out.println("</td>");
+                out.println("end of row"); // Keep clean structuring
                 out.println("</tr>");
             }
             out.println("</table>");
-
-            // Proceed to Checkout Form (சரியான பாதை இணைக்கப்பட்டுள்ளது)
             out.println("<div style='text-align: right;'>");
             out.println("<form action='" + request.getContextPath() + "/checkout' method='post'>");
             out.println("<button type='submit' class='btn-checkout'>Proceed to Checkout →</button>");
