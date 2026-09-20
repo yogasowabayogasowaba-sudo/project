@@ -66,7 +66,7 @@ public class CartDAO {
         return cartList;
     }
 
-    // குறிப்பிட்ட பொருளை மட்டும் கார்ட்டிலிருந்து நீக்கும் மெத்தட்
+
     public boolean removeFromCart(String userEmail, String productName) {
         String query = "DELETE FROM cart WHERE user_email = ? AND product_name = ?";
         try (Connection conn = DBConnection.getConnection();

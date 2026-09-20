@@ -21,7 +21,7 @@ public class ViewCartServlet extends HttpServlet {
         
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("userEmail") == null) {
-            response.sendRedirect("login.html");
+            response.sendRedirect("buyerLogin.html");
             return;
         }
 
@@ -63,7 +63,6 @@ public class ViewCartServlet extends HttpServlet {
                 out.println("<button type='submit' class='btn-remove'>Remove</button>");
                 out.println("</form>");
                 out.println("</td>");
-                out.println("end of row"); // Keep clean structuring
                 out.println("</tr>");
             }
             out.println("</table>");
