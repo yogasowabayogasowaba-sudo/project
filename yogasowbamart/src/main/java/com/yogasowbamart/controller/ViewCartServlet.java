@@ -37,40 +37,57 @@ public class ViewCartServlet extends HttpServlet {
         out.println("table { width: 100%; border-collapse: collapse; margin-top: 20px; }");
         out.println("th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }");
         out.println("th { background-color: #2c3e50; color: white; }");
-        out.println(".btn-checkout { background-color: #16a34a; color: white; padding: 12px 25px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 20px; }");
+        out.println(".btn-checkout { background-color: #16a34a; color: white; padding: 12px 25px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; }");
         out.println(".btn-checkout:hover { background-color: #15803d; }");
-        out.println(".btn-remove { background-color: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }");
-        out.println(".btn-remove:hover { background-color: #dc2626; }");
-        out.println("</style></head><body>");
+        out.println(".btn-home { background-color: #64748b; color: white; padding: 12px 25px; border-radius: 6px; font-size: 16px; font-weight: bold; text-decoration: none; display: inline-block; }");
+        out.println(".btn-home:hover { background-color: #475569; }");
+        out.println("</style>");
+        
+        // JavaScript validation
+        out.println("<script>");
+        out.println("function validateForm() {");
+        out.println("  var checkboxes = document.querySelectorAll('input[name=\"selectedProducts\"]:checked');");
+        out.println("  if (checkboxes.length === 0) {");
+        out.println("    alert('Please select at least one product to proceed to checkout.');");
+        out.println("    return false;");
+        out.println("  }");
+        out.println("  return true;");
+        out.println("}");
+        out.println("</script>");
+        
+        out.println("</head><body>");
 
         out.println("<div class='container'>");
         out.println("<h2>Your Shopping Cart (" + userEmail + ")</h2>");
 
         if (cartItems.isEmpty()) {
             out.println("<p style='text-align:center; color: #666; margin-top: 30px;'>Your cart is currently empty.</p>");
+            out.println("<div style='text-align: center; margin-top: 20px;'>");
+            out.println("<a href='home.html' class='btn-home'>← Return to Home</a>");
+            out.println("</div>");
         } else {
+            // 404 எரரைத் தவிர்க்க முழுமையான Context Path உடன் form action கொடுக்கப்பட்டுள்ளது
+            out.println("<form action='" + request.getContextPath() + "/checkout' method='get' onsubmit='return validateForm();'>");
             out.println("<table>");
-            out.println("<tr><th>Product Name</th><th>Price (₹)</th><th>Quantity</th><th>Action</th></tr>");
+            out.println("<tr><th>Select</th><th>Product Name</th><th>Price (₹)</th><th>Quantity</th></tr>");
+            
+            int index = 0;
             for (String[] item : cartItems) {
                 out.println("<tr>");
+                out.println("<td style='text-align:center;'><input type='checkbox' name='selectedProducts' value='" + item[0] + "_" + index + "' checked></td>");
                 out.println("<td>" + item[0] + "</td>");
                 out.println("<td>" + item[1] + "</td>");
                 out.println("<td>" + item[2] + "</td>");
-                out.println("<td>");
-                // Remove பட்டனுக்கான ஃபார்ம்
-                out.println("<form action='" + request.getContextPath() + "/removeCart' method='post' style='margin:0;'>");
-                out.println("<input type='hidden' name='productName' value='" + item[0] + "'>");
-                out.println("<button type='submit' class='btn-remove'>Remove</button>");
-                out.println("</form>");
-                out.println("</td>");
                 out.println("</tr>");
+                index++;
             }
             out.println("</table>");
-            out.println("<div style='text-align: right;'>");
-            out.println("<form action='" + request.getContextPath() + "/checkout' method='post'>");
+            
+            out.println("<div style='display: flex; justify-content: space-between; align-items: center; margin-top: 20px;'>");
+            out.println("<a href='home.html' class='btn-home'>← Return to Home</a>");
             out.println("<button type='submit' class='btn-checkout'>Proceed to Checkout →</button>");
-            out.println("</form>");
             out.println("</div>");
+            out.println("</form>");
         }
 
         out.println("</div>");

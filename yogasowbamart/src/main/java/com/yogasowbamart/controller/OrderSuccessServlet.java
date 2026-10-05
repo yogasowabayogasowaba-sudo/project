@@ -1,55 +1,66 @@
 package com.yogasowbamart.controller;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import com.yogasowbamart.dao.OrderDAO;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.PrintWriter;
 
-@WebServlet("/orderSuccess")
+@WebServlet("/OrderSuccessServlet")
 public class OrderSuccessServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException {
-        
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-
+        
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("userEmail") == null) {
-            response.sendRedirect("login.html");
+            response.sendRedirect("buyerLogin.html");
             return;
         }
 
         String userEmail = (String) session.getAttribute("userEmail");
+        String fullName = request.getParameter("fullName");
+        String mobileNumber = request.getParameter("mobileNumber");
+        String address = request.getParameter("address");
+        String paymentMethod = request.getParameter("paymentMethod");
+        
+        // Checkout பக்கத்தில் இருந்து வரும் 'selectedProducts'-ஐ 'selectedItems' பெயரில் பெறுகிறோம்
+        String[] selectedItems = request.getParameterValues("selectedProducts");
 
-        out.println("<html><head><title>Order Success - YogasowbaMart</title>");
+        // OrderDAO மூலம் குறிப்பிட்ட பொருட்களை மட்டும் டேட்டாபேஸில் சேமிக்கிறோம்
+        OrderDAO orderDAO = new OrderDAO();
+        boolean isOrdered = orderDAO.placeOrder(userEmail, selectedItems);
+
+        out.println("<html><head><title>Order Success</title>");
         out.println("<style>");
-        out.println("body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; margin: 40px; text-align: center; }");
-        out.println(".container { max-width: 600px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }");
-        out.println("h2 { color: #16a34a; margin-bottom: 20px; }");
-        out.println("p { color: #475569; font-size: 1.1em; }");
-        out.println(".btn { display: inline-block; margin-top: 30px; text-decoration: none; background-color: #0284c7; color: white; padding: 12px 24px; border-radius: 6px; font-weight: 600; }");
-        out.println(".btn:hover { background-color: #0369a1; }");
+        out.println("body { font-family: Arial, sans-serif; background-color: #f4f6f9; padding: 40px; text-align: center; }");
+        out.println(".box { background: white; max-width: 500px; margin: auto; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }");
+        out.println("h2 { color: #16a34a; }");
+        out.println("p { color: #555; font-size: 16px; line-height: 1.5; }");
+        out.println("a { display: inline-block; margin-top: 20px; background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }");
         out.println("</style>");
         out.println("</head><body>");
         
-        out.println("<div class='container'>");
-        out.println("<h2>Order Placed Successfully! 🎉</h2>");
-        out.println("<p>Thank you for shopping with us, <strong>" + userEmail + "</strong>.</p>");
-        out.println("<p>Your order has been placed successfully and saved to the database, and will be delivered soon.</p>");
-        out.println("<a href='orderHistory' class='btn'>View My Orders</a>");
+        out.println("<div class='box'>");
+        if (isOrdered) {
+            out.println("<h2>Order Placed Successfully! 🎉</h2>");
+            out.println("<p>Thank you, <b>" + (fullName != null ? fullName : "Customer") + "</b>!</p>");
+            out.println("<p>Your order will be shipped to: <br><b>" + (address != null ? address : "") + "</b></p>");
+            out.println("<p>Mobile: <b>" + (mobileNumber != null ? mobileNumber : "") + "</b></p>");
+            out.println("<p>Payment Method: <b>" + (paymentMethod != null ? paymentMethod : "Cash on Delivery") + "</b></p>");
+        } else {
+            out.println("<h2 style='color: red;'>Order Failed!</h2>");
+            out.println("<p>No products were selected or something went wrong.</p>");
+        }
+        out.println("<a href='home.html'>Back to Home</a>");
         out.println("</div>");
         
         out.println("</body></html>");
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException {
-        doPost(request, response);
     }
 }

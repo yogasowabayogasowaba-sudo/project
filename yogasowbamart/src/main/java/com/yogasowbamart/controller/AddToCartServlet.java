@@ -18,10 +18,10 @@ public class AddToCartServlet extends HttpServlet {
             throws ServletException, IOException {
         
         try {
-            
             HttpSession session = request.getSession(false);
+            // "buyerEmail"-க்குப் பதிலாக "userEmail" என மாற்றப்பட்டுள்ளது
             if (session == null || session.getAttribute("userEmail") == null) {
-                response.sendRedirect("index.html");
+                response.sendRedirect("buyerLogin.html");
                 return;
             }
             
@@ -30,8 +30,10 @@ public class AddToCartServlet extends HttpServlet {
             String productName = request.getParameter("productName");
             double price = Double.parseDouble(request.getParameter("price"));
             int quantity = Integer.parseInt(request.getParameter("quantity"));
+            
             CartDAO cartDAO = new CartDAO();
             boolean isAdded = cartDAO.addToCart(userEmail, productName, price, quantity);
+            
             if (isAdded) {
                 response.sendRedirect("home.html?status=success");
             } else {

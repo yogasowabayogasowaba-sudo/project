@@ -1,3 +1,4 @@
+
 package com.yogasowbamart.dao;
 
 import java.sql.Connection;
@@ -8,8 +9,8 @@ public class DBConnection {
     public static Connection getConnection() {
         Connection conn = null;
         try {
-            Class.forName("org.h2.Driver");
-            conn = DriverManager.getConnection("jdbc:h2:~/yogasowbamart", "sa", "");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/demomysql", "root", "yoga@2007");
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
