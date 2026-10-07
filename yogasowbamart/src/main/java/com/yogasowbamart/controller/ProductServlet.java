@@ -5,6 +5,7 @@ import com.yogasowbamart.dao.ProductDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,7 +23,7 @@ public class ProductServlet extends HttpServlet {
         String category = request.getParameter("category");
 
         ProductDAO productDAO = new ProductDAO();
-        List<String[]> products = productDAO.searchProducts(keyword, category);
+        List<Map<String, String>> products = productDAO.searchProducts(keyword, category);
 
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
@@ -44,13 +45,13 @@ public class ProductServlet extends HttpServlet {
         if (products.isEmpty()) {
             out.println("<tr><td colspan='5'>No products found!</td></tr>");
         } else {
-            for (String[] p : products) {
+            for (Map<String, String> p : products) {
                 out.println("<tr>");
-                out.println("<td>" + p[0] + "</td>");
-                out.println("<td>" + p[1] + "</td>");
-                out.println("<td>" + p[2] + "</td>");
-                out.println("<td>Rs. " + p[3] + "</td>");
-                out.println("<td>" + p[4] + "</td>");
+                out.println("<td>" + p.get("id") + "</td>");
+                out.println("<td>" + p.get("name") + "</td>");
+                out.println("<td>" + p.get("description") + "</td>");
+                out.println("<td>Rs. " + p.get("price") + "</td>");
+                out.println("<td>" + p.get("category") + "</td>");
                 out.println("</tr>");
             }
         }

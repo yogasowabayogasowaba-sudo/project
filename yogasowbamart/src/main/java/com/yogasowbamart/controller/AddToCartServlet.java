@@ -19,7 +19,7 @@ public class AddToCartServlet extends HttpServlet {
         
         try {
             HttpSession session = request.getSession(false);
-            // "buyerEmail"-க்குப் பதிலாக "userEmail" என மாற்றப்பட்டுள்ளது
+        
             if (session == null || session.getAttribute("userEmail") == null) {
                 response.sendRedirect("buyerLogin.html");
                 return;

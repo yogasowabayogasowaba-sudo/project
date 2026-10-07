@@ -1,6 +1,7 @@
 package com.yogasowbamart.controller;
 
 import com.yogasowbamart.dao.OrderDAO;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -8,59 +9,60 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.Enumeration;
 
 @WebServlet("/OrderSuccessServlet")
 public class OrderSuccessServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
+        HttpSession session = request.getSession();
         
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("userEmail") == null) {
-            response.sendRedirect("buyerLogin.html");
+        // 1. செஷனில் இருந்து லாகின் செய்துள்ள யூசரின் ஈமெயிலைப் பெறுதல்
+        String userEmail = (String) session.getAttribute("userEmail");
+        if (userEmail == null) {
+            userEmail = (String) session.getAttribute("email");
+        }
+
+        // 2. செக் அவுட் ஃபார்மில் இருந்து வரும் தேர்ந்தெடுக்கப்பட்ட பொருட்களைப் பெறுதல்
+        String[] selectedItems = request.getParameterValues("selectedProducts");
+        
+        if (selectedItems == null || selectedItems.length == 0) {
+            selectedItems = (String[]) session.getAttribute("cartItems");
+        }
+
+        // 3. யூசர் அல்லது பொருட்கள் இல்லாவிட்டால் எரர் பக்கத்திற்கு அனுப்புதல்
+        if (userEmail == null || selectedItems == null || selectedItems.length == 0) {
+            response.sendRedirect("orderFailed.jsp");
             return;
         }
 
-        String userEmail = (String) session.getAttribute("userEmail");
-        String fullName = request.getParameter("fullName");
-        String mobileNumber = request.getParameter("mobileNumber");
-        String address = request.getParameter("address");
-        String paymentMethod = request.getParameter("paymentMethod");
-        
-        // Checkout பக்கத்தில் இருந்து வரும் 'selectedProducts'-ஐ 'selectedItems' பெயரில் பெறுகிறோம்
-        String[] selectedItems = request.getParameterValues("selectedProducts");
-
-        // OrderDAO மூலம் குறிப்பிட்ட பொருட்களை மட்டும் டேட்டாபேஸில் சேமிக்கிறோம்
+        // 4. ஆர்டரை டேட்டாபேஸில் பதிவு செய்தல்
         OrderDAO orderDAO = new OrderDAO();
-        boolean isOrdered = orderDAO.placeOrder(userEmail, selectedItems);
+        boolean isPlaced = orderDAO.placeOrder(userEmail, selectedItems);
 
-        out.println("<html><head><title>Order Success</title>");
-        out.println("<style>");
-        out.println("body { font-family: Arial, sans-serif; background-color: #f4f6f9; padding: 40px; text-align: center; }");
-        out.println(".box { background: white; max-width: 500px; margin: auto; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }");
-        out.println("h2 { color: #16a34a; }");
-        out.println("p { color: #555; font-size: 16px; line-height: 1.5; }");
-        out.println("a { display: inline-block; margin-top: 20px; background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }");
-        out.println("</style>");
-        out.println("</head><body>");
-        
-        out.println("<div class='box'>");
-        if (isOrdered) {
-            out.println("<h2>Order Placed Successfully! 🎉</h2>");
-            out.println("<p>Thank you, <b>" + (fullName != null ? fullName : "Customer") + "</b>!</p>");
-            out.println("<p>Your order will be shipped to: <br><b>" + (address != null ? address : "") + "</b></p>");
-            out.println("<p>Mobile: <b>" + (mobileNumber != null ? mobileNumber : "") + "</b></p>");
-            out.println("<p>Payment Method: <b>" + (paymentMethod != null ? paymentMethod : "Cash on Delivery") + "</b></p>");
+        if (isPlaced) {
+            // **மிக முக்கியம்:** ஆர்டர் வெற்றிகரமாக முடிந்ததும் கார்ட்டைக் காலி செய்தல் (Clear Cart)
+            session.removeAttribute("cartItems");
+            session.removeAttribute("selectedProducts");
+            session.removeAttribute("cart");
+            
+            // கார்ட் தொடர்பான வேறு ஏதேனும் செஷன் பெயர்கள் இருந்தால் அவற்றையும் நீக்குதல்
+            Enumeration<String> attrs = session.getAttributeNames();
+            while (attrs.hasMoreElements()) {
+                String attr = attrs.nextElement();
+                if (attr.toLowerCase().contains("cart")) {
+                    session.removeAttribute(attr);
+                }
+            }
+
+            response.sendRedirect("orderSuccess.jsp");
         } else {
-            out.println("<h2 style='color: red;'>Order Failed!</h2>");
-            out.println("<p>No products were selected or something went wrong.</p>");
+            response.sendRedirect("orderFailed.jsp");
         }
-        out.println("<a href='home.html'>Back to Home</a>");
-        out.println("</div>");
-        
-        out.println("</body></html>");
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doPost(request, response);
     }
 }

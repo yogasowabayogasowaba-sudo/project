@@ -4,79 +4,174 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProductDAO {
 
-    private String dbUrl = "jdbc:h2:~/yogasowbamart;DB_CLOSE_DELAY=-1";
-    private String dbUser = "sa";
-    private String dbPass = "";
+    private final String DB_URL = "jdbc:mysql://localhost:3306/yogasowbamart?useSSL=false&serverTimezone=UTC";
+    private final String DB_USER = "root";
+    private final String DB_PASSWORD = "yoga@2007";
 
-    public ProductDAO() {
+    // 1. புதிய தயாரிப்பைச் சேர்த்தல் (Add Product)
+    public boolean addProduct(String name, String description, double price, int stock, String category) {
+        boolean success = false;
         try {
-            Class.forName("org.h2.Driver");
-            try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPass);
-                 Statement stmt = conn.createStatement()){
-                stmt.execute("DROP TABLE IF EXISTS products");
-                
-                stmt.execute("CREATE TABLE products (" +
-                        "id INT PRIMARY KEY, " +
-                        "name VARCHAR(255), " +
-                        "description VARCHAR(500), " +
-                        "price DOUBLE, " +
-                        "category VARCHAR(100))");
-                stmt.execute("MERGE INTO products (id, name, description, price, category) KEY(id) VALUES (101, 'Laptop', 'High performance laptop', 45000, 'Electronics')");
-                stmt.execute("MERGE INTO products (id, name, description, price, category) KEY(id) VALUES (102, 'Running Shoes', 'Comfortable sports shoes', 1500, 'Footwear')");
-                stmt.execute("MERGE INTO products (id, name, description, price, category) KEY(id) VALUES (103, 'Smartphone', 'Latest 5G smartphone', 18000, 'Electronics')");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            String sql = "INSERT INTO products (name, description, price, stock, category) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, name);
+            stmt.setString(2, description);
+            stmt.setDouble(3, price);
+            stmt.setInt(4, stock);
+            stmt.setString(5, category);
+            
+            int rows = stmt.executeUpdate();
+            if (rows > 0) {
+                success = true;
             }
+            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("DAO Add Error: " + e.getMessage());
         }
+        return success;
     }
 
-    public List<String[]> searchProducts(String keyword, String category) {
-        List<String[]> productList = new ArrayList<>();
-        StringBuilder query = new StringBuilder("SELECT * FROM products WHERE 1=1");
-
-        if (keyword != null && !keyword.trim().isEmpty()) {
-            query.append(" AND (LOWER(name) LIKE ? OR LOWER(description) LIKE ?)");
-        }
-        if (category != null && !category.trim().isEmpty() && !category.equals("All")) {
-            query.append(" AND category = ?");
-        }
-
+    // 2. அனைத்து தயாரிப்புகளையும் பெறுதல் (Get All Products)
+    public List<Map<String, String>> getAllProducts() {
+        List<Map<String, String>> productList = new ArrayList<>();
         try {
-            Class.forName("org.h2.Driver");
-            try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPass);
-                 PreparedStatement ps = conn.prepareStatement(query.toString())) {
-                
-                int paramIndex = 1;
-                if (keyword != null && !keyword.trim().isEmpty()) {
-                    String searchPattern = "%" + keyword.toLowerCase().trim() + "%";
-                    ps.setString(paramIndex++, searchPattern);
-                    ps.setString(paramIndex++, searchPattern);
-                }
-                if (category != null && !category.trim().isEmpty() && !category.equals("All")) {
-                    ps.setString(paramIndex++, category);
-                }
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            String sql = "SELECT * FROM products";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
 
-                try (ResultSet rs = ps.executeQuery()) {
-                    while (rs.next()) {
-                        String[] prod = {
-                            String.valueOf(rs.getInt("id")),
-                            rs.getString("name"),
-                            rs.getString("description"),
-                            String.valueOf(rs.getDouble("price")),
-                            rs.getString("category")
-                        };
-                        productList.add(prod);
-                    }
-                }
+            while (rs.next()) {
+                Map<String, String> product = new HashMap<>();
+                product.put("id", String.valueOf(rs.getInt("id")));
+                product.put("name", rs.getString("name"));
+                product.put("description", rs.getString("description"));
+                product.put("price", String.valueOf(rs.getDouble("price")));
+                product.put("stock", String.valueOf(rs.getInt("stock")));
+                product.put("category", rs.getString("category"));
+                productList.add(product);
             }
+            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("DAO GetAll Error: " + e.getMessage());
+        }
+        return productList;
+    }
+
+    // 3. ஐடி மூலம் குறிப்பிட்ட தயாரிப்பைப் பெறுதல் (Get Product By ID)
+    public Map<String, String> getProductById(int id) {
+        Map<String, String> product = null;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            String sql = "SELECT * FROM products WHERE id=?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                product = new HashMap<>();
+                product.put("id", String.valueOf(rs.getInt("id")));
+                product.put("name", rs.getString("name"));
+                product.put("description", rs.getString("description"));
+                product.put("price", String.valueOf(rs.getDouble("price")));
+                product.put("stock", String.valueOf(rs.getInt("stock")));
+                product.put("category", rs.getString("category"));
+            }
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("DAO GetById Error: " + e.getMessage());
+        }
+        return product;
+    }
+
+    // 4. தயாரிப்பு விவரங்களைப் புதுப்பித்தல் (Update Product)
+    public boolean updateProduct(int id, String name, String description, double price, int stock, String category) {
+        boolean success = false;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            String sql = "UPDATE products SET name=?, description=?, price=?, stock=?, category=? WHERE id=?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, name);
+            stmt.setString(2, description);
+            stmt.setDouble(3, price);
+            stmt.setInt(4, stock);
+            stmt.setString(5, category);
+            stmt.setInt(6, id);
+            
+            int rows = stmt.executeUpdate();
+            if (rows > 0) {
+                success = true;
+            }
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("DAO Update Error: " + e.getMessage());
+        }
+        return success;
+    }
+
+    // 5. தயாரிப்பை நீக்குதல் (Delete Product)
+    public boolean deleteProduct(int id) {
+        boolean success = false;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            String sql = "DELETE FROM products WHERE id=?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            
+            int rows = stmt.executeUpdate();
+            if (rows > 0) {
+                success = true;
+            }
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("DAO Delete Error: " + e.getMessage());
+        }
+        return success;
+    }
+
+    // 6. தயாரிப்புகளைத் தேடுதல் (Search Products)
+    public List<Map<String, String>> searchProducts(String keyword, String category) {
+        List<Map<String, String>> productList = new ArrayList<>();
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            String sql = "SELECT * FROM products WHERE name LIKE ? OR category LIKE ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, "%" + keyword + "%");
+            stmt.setString(2, "%" + category + "%");
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Map<String, String> product = new HashMap<>();
+                product.put("id", String.valueOf(rs.getInt("id")));
+                product.put("name", rs.getString("name"));
+                product.put("description", rs.getString("description"));
+                product.put("price", String.valueOf(rs.getDouble("price")));
+                product.put("stock", String.valueOf(rs.getInt("stock")));
+                product.put("category", rs.getString("category"));
+                productList.add(product);
+            }
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("DAO Search Error: " + e.getMessage());
         }
         return productList;
     }

@@ -29,6 +29,8 @@ public class ViewProductsServlet extends HttpServlet {
 
             while (rs.next()) {
                 HashMap<String, String> product = new HashMap<>();
+                // இங்கே 'id' சரியாகச் சேர்க்கப்பட்டுள்ளது:
+                product.put("id", rs.getString("id"));
                 product.put("name", rs.getString("name"));
                 product.put("description", rs.getString("description"));
                 product.put("price", rs.getString("price"));

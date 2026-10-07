@@ -23,7 +23,6 @@ public class OrderHistoryServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         HttpSession session = request.getSession(false);
-        // 'buyerEmail'-க்கு பதிலாக 'userEmail' என மாற்றப்பட்டுள்ளது
         if (session == null || session.getAttribute("userEmail") == null) {
             response.sendRedirect("buyerLogin.html");
             return;

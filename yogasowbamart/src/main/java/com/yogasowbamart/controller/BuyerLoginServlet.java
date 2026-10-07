@@ -24,7 +24,6 @@ public class BuyerLoginServlet extends HttpServlet {
 
         if (isValid) {
             HttpSession session = request.getSession();
-            // CheckoutServlet உடன் ஒத்துப்போக "buyerEmail"-ஐ "userEmail" என மாட்டியுள்ளோம்
             session.setAttribute("userEmail", email);
             response.sendRedirect("home.html");
         } else {

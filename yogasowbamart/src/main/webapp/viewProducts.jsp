@@ -31,6 +31,13 @@
                     <h3><%= product.get("name") %></h3>
                     <p><strong>Description:</strong> <%= product.get("description") %></p>
                     <p><strong>Price:</strong> ₹<%= product.get("price") %> &nbsp;|&nbsp; <strong>Category:</strong> <%= product.get("category") %> &nbsp;|&nbsp; <strong>Stock:</strong> <%= product.get("stock") %></p>
+                    
+                    <!-- Edit ken Delete buttons -->
+                    <div style="margin-top: 10px;">
+                        <!-- Naurnos a link a mangiturong iti servlet imbes a direkta iti JSP -->
+                        <a href="editProductForm?id=<%= product.get("id") %>" style="background: #ffc107; color: #000; padding: 6px 12px; text-decoration: none; border-radius: 4px; margin-right: 8px; font-size: 14px;">Edit</a>
+                        <a href="deleteProduct?id=<%= product.get("id") %>" style="background: #dc3545; color: #fff; padding: 6px 12px; text-decoration: none; border-radius: 4px; font-size: 14px;" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
+                    </div>
                 </div>
     <%
             }

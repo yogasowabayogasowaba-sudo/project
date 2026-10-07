@@ -3,6 +3,7 @@ C:\project\yogasowbamart\src\main\java\com\yogasowbamart\controller\AddToCartSer
 C:\project\yogasowbamart\src\main\java\com\yogasowbamart\controller\BuyerLoginServlet.java
 C:\project\yogasowbamart\src\main\java\com\yogasowbamart\controller\BuyerRegisterServlet.java
 C:\project\yogasowbamart\src\main\java\com\yogasowbamart\controller\CheckoutServlet.java
+C:\project\yogasowbamart\src\main\java\com\yogasowbamart\controller\DeleteProductServlet.java
 C:\project\yogasowbamart\src\main\java\com\yogasowbamart\controller\EditProductFormServlet.java
 C:\project\yogasowbamart\src\main\java\com\yogasowbamart\controller\EditProductsListServlet.java
 C:\project\yogasowbamart\src\main\java\com\yogasowbamart\controller\LoginServlet.java
@@ -11,7 +12,9 @@ C:\project\yogasowbamart\src\main\java\com\yogasowbamart\controller\OrderSuccess
 C:\project\yogasowbamart\src\main\java\com\yogasowbamart\controller\ProductServlet.java
 C:\project\yogasowbamart\src\main\java\com\yogasowbamart\controller\RemoveCartServlet.java
 C:\project\yogasowbamart\src\main\java\com\yogasowbamart\controller\SellerLoginServlet.java
+C:\project\yogasowbamart\src\main\java\com\yogasowbamart\controller\SellerOrderServlet.java
 C:\project\yogasowbamart\src\main\java\com\yogasowbamart\controller\SellerRegisterServlet.java
+C:\project\yogasowbamart\src\main\java\com\yogasowbamart\controller\UpdateProductServlet.java
 C:\project\yogasowbamart\src\main\java\com\yogasowbamart\controller\ViewCartServlet.java
 C:\project\yogasowbamart\src\main\java\com\yogasowbamart\controller\ViewProductsServlet.java
 C:\project\yogasowbamart\src\main\java\com\yogasowbamart\dao\BuyerDAO.java

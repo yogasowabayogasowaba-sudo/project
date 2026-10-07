@@ -98,10 +98,13 @@ public class CheckoutServlet extends HttpServlet {
             out.println("<h3>Delivery Details</h3>");
             out.println("<form action='OrderSuccessServlet' method='post'>");
             
-            // மிக முக்கியம்: செலக்ட் செய்த பொருட்களை hidden inputs மூலம் அடுத்த serv-க்கு அனுப்புகிறோம்
+            // செலக்ட் செய்த பொருட்களை hidden inputs மூலம் அனுப்புகிறோம்
             for (String val : selectedItems) {
                 out.println("<input type='hidden' name='selectedProducts' value='" + val + "'>");
             }
+            
+            // முக்கிய திருத்தம்: மொத்த அமௌன்ட்டையும் அடுத்த சர்வெட்டுக்கு அனுப்புவதற்கான hidden input
+            out.println("<input type='hidden' name='totalAmount' value='" + totalAmount + "'>");
 
             out.println("<div class='form-group'>");
             out.println("<label>Full Name:</label>");
