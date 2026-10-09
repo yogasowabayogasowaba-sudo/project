@@ -20,6 +20,7 @@ com\yogasowbamart\controller\AddToCartServlet.class
 com\yogasowbamart\controller\BuyerLoginServlet.class
 com\yogasowbamart\controller\SellerRegisterServlet.class
 com\yogasowbamart\controller\ProductServlet.class
+com\yogasowbamart\controller\AdminLoginServlet.class
 com\yogasowbamart\controller\CheckoutServlet.class
 com\yogasowbamart\dao\DBConnection.class
 com\yogasowbamart\controller\AddProductServlet.class

@@ -15,20 +15,40 @@ import java.util.List;
 public class OrderDAO {
 
     // 1. ஆர்டர் செய்யும் போது கார்ட்டில் இருந்து உண்மையான விலை, குவாண்டிட்டி எடுத்து ஆர்டர் டேபிளில் சேமிக்க
-public boolean placeOrder(String userEmail, String[] selectedItems) {
+    public boolean placeOrder(String userEmail, String[] selectedItems) {
         if (selectedItems == null || selectedItems.length == 0) {
             return false;
         }
 
         boolean isSuccess = false;
+        
+        // யூசரின் பெயரை எடுக்க குவரி (உங்களுடைய டேபிள் பெயர் 'users' மற்றும் காலம் 'name' என假設 செய்கிறோம்)
+        String getUserNameQuery = "SELECT name FROM users WHERE email = ?";
         String getCartItemQuery = "SELECT product_name, price, quantity FROM cart WHERE user_email = ? AND (product_name = ? OR product_name LIKE ?)";
-        String insertQuery = "INSERT INTO orders (user_email, product_name, price, quantity, total_amount, order_date, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        // buyer_name காலத்தை இன்செர்ட் குவரியில் சேர்த்துள்ளோம்
+        String insertQuery = "INSERT INTO orders (user_email, buyer_name, product_name, price, quantity, total_amount, order_date, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         String deleteCartQuery = "DELETE FROM cart WHERE user_email = ?"; 
 
         String currentDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         try (Connection conn = DBConnection.getConnection()) {
             conn.setAutoCommit(false);
+
+            // 1. முதலில் யூசரின் பெயரை கண்டுபிடிக்கிறோம்
+            String buyerName = "Guest";
+            try (PreparedStatement pstmtUser = conn.prepareStatement(getUserNameQuery)) {
+                pstmtUser.setString(1, userEmail);
+                try (ResultSet rsUser = pstmtUser.executeQuery()) {
+                    if (rsUser.next()) {
+                        String name = rsUser.getString("name");
+                        if (name != null && !name.trim().isEmpty()) {
+                            buyerName = name;
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                // பெயர் கிடைக்கவில்லை என்றால் 'Guest' என்றே இருக்கட்டும்
+            }
 
             try (PreparedStatement pstmtGetCart = conn.prepareStatement(getCartItemQuery);
                  PreparedStatement pstmtInsert = conn.prepareStatement(insertQuery);
@@ -65,26 +85,26 @@ public boolean placeOrder(String userEmail, String[] selectedItems) {
                         }
                     }
 
-                    // ஒருவேளை டேட்டாபேஸில் விலையைக் கண்டுபிடிக்க முடியவில்லை என்றால் (0.0 ஆக இருந்தால்), 
-                    // அந்த குறிப்பிட்ட பொருட்களுக்குரிய நிலையான விலையை அங்கே ஃபிக்ஸ் செய்துவிடலாம்!
                     if (price == 0.0) {
                         String lowerItem = actualProductName.toLowerCase();
                         if (lowerItem.contains("kurti")) {
-                            price = 599.0; // உங்கள் குர்த்தியின் விலை என்னவோ அதை இங்கு போட்டுக்கொள்ளலாம்
+                            price = 599.0;
                         } else if (lowerItem.contains("jeans")) {
-                            price = 999.0; // உங்கள் ஜீன்ஸின் விலை என்னவோ அதை இங்கு போட்டுக்கொள்ளலாம்
+                            price = 999.0;
+                        } else if (lowerItem.contains("yoga mat")) {
+                            price = 799.0;
                         }
                     }
-
                     double totalAmount = price * quantity;
 
                     pstmtInsert.setString(1, userEmail);
-                    pstmtInsert.setString(2, dbProductName); 
-                    pstmtInsert.setDouble(3, price);
-                    pstmtInsert.setInt(4, quantity);
-                    pstmtInsert.setDouble(5, totalAmount);
-                    pstmtInsert.setString(6, currentDate);
-                    pstmtInsert.setString(7, "Placed");
+                    pstmtInsert.setString(2, buyerName); // வாடிக்கையாளரின் உண்மையான பெயர் இங்கே செல்கிறது
+                    pstmtInsert.setString(3, dbProductName); 
+                    pstmtInsert.setDouble(4, price);
+                    pstmtInsert.setInt(5, quantity);
+                    pstmtInsert.setDouble(6, totalAmount);
+                    pstmtInsert.setString(7, currentDate);
+                    pstmtInsert.setString(8, "Placed");
                     pstmtInsert.addBatch();
                 }
                 
@@ -108,10 +128,12 @@ public boolean placeOrder(String userEmail, String[] selectedItems) {
 
         return isSuccess;
     }
+
     // 2. செல்லர் பக்கத்திற்கு அனைத்து ஆர்டர்களையும் எடுக்க (Get All Orders)
     public List<Order> getAllOrders() {
         List<Order> ordersList = new ArrayList<>();
-        String query = "SELECT order_id, user_email, product_name, price, quantity, total_amount, order_date, status FROM orders ORDER BY order_id DESC";
+        // buyer_name காலத்தை SELECT குவரியில் சேர்த்துள்ளோம்
+        String query = "SELECT order_id, user_email, buyer_name, product_name, price, quantity, total_amount, order_date, status FROM orders ORDER BY order_id DESC";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query);
@@ -121,7 +143,9 @@ public boolean placeOrder(String userEmail, String[] selectedItems) {
                 Order order = new Order();
                 order.setOrderId(rs.getInt("order_id"));
                 order.setCustomerEmail(rs.getString("user_email"));
+                order.setBuyerName(rs.getString("buyer_name")); // பெயர் செட் செய்யப்படுகிறது
                 order.setProductName(rs.getString("product_name"));
+                order.setPrice(rs.getDouble("price"));
                 order.setQuantity(rs.getInt("quantity"));
                 order.setTotalAmount(rs.getDouble("total_amount"));
                 order.setOrderDate(rs.getString("order_date"));
@@ -138,10 +162,12 @@ public boolean placeOrder(String userEmail, String[] selectedItems) {
     // 3. குறிப்பிட்ட யூசரின் ஆர்டர்களை எடுக்க (Get Orders By User)
     public List<Order> getOrdersByUser(String userEmail) {
         List<Order> ordersList = new ArrayList<>();
-        String query = "SELECT order_id, user_email, product_name, price, quantity, total_amount, order_date, status FROM orders WHERE user_email = ? ORDER BY order_id DESC";
+        String query = "SELECT order_id, user_email, buyer_name, product_name, price, quantity, total_amount, order_date, status WHERE user_email = ? ORDER BY order_id DESC";
+        // மேலே உள்ள குவரியில் 'FROM orders' விடுபட்டுவிடாமல் இருக்க கவனிக்கவும் (கீழே உள்ளதை பயன்படுத்தவும்):
+        String safeQuery = "SELECT order_id, user_email, buyer_name, product_name, price, quantity, total_amount, order_date, status FROM orders WHERE user_email = ? ORDER BY order_id DESC";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+             PreparedStatement pstmt = conn.prepareStatement(safeQuery)) {
             
             pstmt.setString(1, userEmail);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -149,7 +175,9 @@ public boolean placeOrder(String userEmail, String[] selectedItems) {
                     Order order = new Order();
                     order.setOrderId(rs.getInt("order_id"));
                     order.setCustomerEmail(rs.getString("user_email"));
+                    order.setBuyerName(rs.getString("buyer_name"));
                     order.setProductName(rs.getString("product_name"));
+                    order.setPrice(rs.getDouble("price"));
                     order.setQuantity(rs.getInt("quantity"));
                     order.setTotalAmount(rs.getDouble("total_amount"));
                     order.setOrderDate(rs.getString("order_date"));
