@@ -89,7 +89,7 @@
 
     <div class="header">
         <h1>Admin Dashboard</h1>
-        <a href="AdminLogoutServlet" class="logout-btn">Logout</a>
+        <a href="logout" class="logout-btn">Logout</a>
     </div>
 
     <div class="container">
