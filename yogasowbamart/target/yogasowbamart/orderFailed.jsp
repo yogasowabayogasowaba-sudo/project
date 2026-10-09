@@ -41,7 +41,7 @@
     <div class="container">
         <h2>⚠️ Order Placement Failed!</h2>
         <p>Sorry, we could not process your order at this moment. Please try again later.</p>
-        <a href="home.jsp" class="btn">Go to Home</a>
+        <a href="home.html" class="btn">Go to Home</a>
     </div>
 
 </body>

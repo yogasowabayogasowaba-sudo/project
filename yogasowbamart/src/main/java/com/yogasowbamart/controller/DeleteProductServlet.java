@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.yogasowbamart.dao.ProductDAO;
 
-@WebServlet("/deleteProduct")
+@WebServlet("/DeleteProduct")
 public class DeleteProductServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
@@ -18,7 +18,8 @@ public class DeleteProductServlet extends HttpServlet {
             boolean isDeleted = productDAO.deleteProduct(productId);
 
             if (isDeleted) {
-                response.sendRedirect("viewProducts.jsp"); 
+                // அட்மின் மேனேஜ்மென்ட் பக்கத்திற்கே திரும்ப அழைத்துச் செல்ல redirect மாற்றப்பட்டுள்ளது
+                response.sendRedirect("adminManageProducts.jsp"); 
             } else {
                 response.getWriter().println("Product deletion failed!");
             }
