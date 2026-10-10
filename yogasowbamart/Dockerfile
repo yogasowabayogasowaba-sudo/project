@@ -7,10 +7,8 @@ RUN mvn clean package -DskipTests
 # Run stage
 FROM eclipse-temurin:21-jre
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
-
-# Railway PORT configuration
+# target ஃபோல்டரில் இருக்கும் .jar / .war ஃபைலை சரியாக app.jar என காப்பி செய்ய
+COPY --from=build /app/target/*.[jw]ar app.jar
 ENV PORT=8080
 EXPOSE 8080
-
-CMD ["sh", "-c", "java -Dserver.port=${PORT} -Dport.http=${PORT} -jar app.jar"]
+ENTRYPOINT ["sh", "-c", "java -jar app.jar --server.port=${PORT}"]
