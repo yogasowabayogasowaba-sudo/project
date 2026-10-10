@@ -26,7 +26,7 @@ public class CartDAO {
         }
     }
 
-    // கார்ட்டில் பொருளைச் சேர்க்க
+   
     public boolean addToCart(String userEmail, String productName, double price, int quantity) {
         String query = "INSERT INTO cart (user_email, product_name, price, quantity) VALUES (?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
@@ -44,7 +44,7 @@ public class CartDAO {
         return false;
     }
 
-    // பயனரின் கார்ட்டில் உள்ள பொருட்களைப் பெற
+    
     public List<String[]> getCartItems(String userEmail) {
         List<String[]> cartItems = new ArrayList<>();
         String query = "SELECT product_name, price, quantity FROM cart WHERE user_email = ?";
@@ -68,7 +68,7 @@ public class CartDAO {
         return cartItems;
     }
 
-    // கார்ட்டில் இருந்து ஒரு குறிப்பிட்ட பொருளை மட்டும் நீக்க
+    
     public boolean removeFromCart(String userEmail, String productName) {
         String query = "DELETE FROM cart WHERE user_email = ? AND product_name = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -84,7 +84,7 @@ public class CartDAO {
         return false;
     }
 
-    // முழு கார்ட்டைக் காலி செய்ய
+   
     public void clearCart(String userEmail) {
         String query = "DELETE FROM cart WHERE user_email = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -98,7 +98,7 @@ public class CartDAO {
         }
     }
 
-    // ஆர்டர் செய்த குறிப்பிட்ட பொருட்களை மட்டும் கார்ட்டில் இருந்து நீக்க
+    
     public void removeSelectedItems(String userEmail, List<String> productNames) {
         if (productNames == null || productNames.isEmpty()) {
             return;

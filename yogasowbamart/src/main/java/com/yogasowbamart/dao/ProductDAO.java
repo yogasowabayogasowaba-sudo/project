@@ -15,7 +15,7 @@ public class ProductDAO {
     private final String DB_USER = "root";
     private final String DB_PASSWORD = "yoga@2007";
 
-    // 1. புதிய தயாரிப்பைச் சேர்த்தல் (Add Product)
+    
     public boolean addProduct(String name, String description, double price, int stock, String category) {
         boolean success = false;
         try {
@@ -69,7 +69,7 @@ public class ProductDAO {
         return productList;
     }
 
-    // 3. ஐடி மூலம் குறிப்பிட்ட தயாரிப்பைப் பெறுதல் (Get Product By ID)
+    
     public Map<String, String> getProductById(int id) {
         Map<String, String> product = null;
         try {
@@ -97,7 +97,7 @@ public class ProductDAO {
         return product;
     }
 
-    // 4. தயாரிப்பு விவரங்களைப் புதுப்பித்தல் (Update Product)
+    
     public boolean updateProduct(int id, String name, String description, double price, int stock, String category) {
         boolean success = false;
         try {
@@ -124,7 +124,7 @@ public class ProductDAO {
         return success;
     }
 
-    // 5. தயாரிப்பை நீக்குதல் (Delete Product)
+    
     public boolean deleteProduct(int id) {
         boolean success = false;
         try {
@@ -146,7 +146,7 @@ public class ProductDAO {
         return success;
     }
 
-    // 6. தயாரிப்புகளைத் தேடுதல் (Search Products)
+   
     public List<Map<String, String>> searchProducts(String keyword, String category) {
         List<Map<String, String>> productList = new ArrayList<>();
         try {

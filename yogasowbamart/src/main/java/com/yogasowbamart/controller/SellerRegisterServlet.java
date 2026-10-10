@@ -27,7 +27,7 @@ public class SellerRegisterServlet extends HttpServlet {
         try {
             Connection conn = DBConnection.getConnection();
             
-            // 1. Check if email already exists
+           
             PreparedStatement checkStmt = conn.prepareStatement("SELECT * FROM sellers WHERE email = ?");
             checkStmt.setString(1, email);
             ResultSet rs = checkStmt.executeQuery();
@@ -37,7 +37,7 @@ public class SellerRegisterServlet extends HttpServlet {
                 return;
             }
 
-            // 2. Insert new seller account
+           
             String sql = "INSERT INTO sellers (name, email, password) VALUES (?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, name);

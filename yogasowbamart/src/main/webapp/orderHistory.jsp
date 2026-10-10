@@ -3,7 +3,6 @@
 <%@ page import="com.yogasowbamart.model.Order" %>
 <%@ page import="com.yogasowbamart.dao.OrderDAO" %>
 <%
-    
     String userEmail = (String) session.getAttribute("userEmail");
     
     if (userEmail == null) {
@@ -21,12 +20,14 @@
     <title>My Order History - Yogasowbamart</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
-        .container { max-width: 900px; background: white; margin: auto; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .container { max-width: 1000px; background: white; margin: auto; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #333; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { padding: 12px; border: 1px solid #ddd; text-align: center; }
         th { background-color: #4CAF50; color: white; }
         tr:nth-child(even) { background-color: #f9f9f9; }
+        .review-btn { padding: 6px 12px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px; font-size: 14px; }
+        .review-btn:hover { background-color: #0056b3; }
         .back-btn { display: inline-block; margin-top: 20px; padding: 10px 15px; background: #333; color: white; text-decoration: none; border-radius: 4px; }
         .back-btn:hover { background: #555; }
     </style>
@@ -48,6 +49,7 @@
                     <th>Total Amount (₹)</th>
                     <th>Order Date</th>
                     <th>Status</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -59,14 +61,18 @@
                         <td>₹<%= order.getTotalAmount() %></td>
                         <td><%= order.getOrderDate() %></td>
                         <td><%= order.getStatus() %></td>
+                        <td>
+                            <!-- Write Review Button -->
+                            <a href="writeReview.jsp?productId=<%= order.getProductId() %>" class="review-btn">Write Review</a>
+                        </td>
                     </tr>
                 <% } %>
             </tbody>
         </table>
-    <% %>
+    <% } %>
     
     <a href="home.html" class="back-btn">Back to Home</a>
 </div>
 
 </body>
-</html>
+</html>           

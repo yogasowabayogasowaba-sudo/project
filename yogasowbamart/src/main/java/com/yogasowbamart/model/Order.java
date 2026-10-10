@@ -2,8 +2,9 @@ package com.yogasowbamart.model;
 
 public class Order {
     private int orderId;
+    private int productId; // புதிய productId ஃபீல்ட் சேர்க்கப்பட்டுள்ளது
     private String customerEmail;
-    private String buyerName; // புதிய buyerName ஃபீல்ட்
+    private String buyerName; 
     private String productName;
     private double price; 
     private int quantity;
@@ -18,6 +19,14 @@ public class Order {
 
     public void setOrderId(int orderId) {
         this.orderId = orderId;
+    }
+
+    public int getProductId() { // ProductId க்கான Getter
+        return productId;
+    }
+
+    public void setProductId(int productId) { // ProductId க்கான Setter
+        this.productId = productId;
     }
 
     public String getCustomerEmail() {
@@ -37,7 +46,6 @@ public class Order {
         this.customerEmail = customerEmail;
     }
 
-    // buyerName க்கான Getters மற்றும் Setters (அட்மின் பக்கத்தில் பெயர் காட்ட)
     public String getBuyerName() {
         return buyerName;
     }

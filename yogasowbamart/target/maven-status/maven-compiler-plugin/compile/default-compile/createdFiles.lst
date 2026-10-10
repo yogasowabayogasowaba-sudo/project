@@ -1,6 +1,8 @@
 com\yogasowbamart\controller\EditProductsListServlet.class
 com\yogasowbamart\controller\ViewCartServlet.class
 com\yogasowbamart\dao\ProductDAO.class
+com\yogasowbamart\controller\SubmitReviewServlet.class
+com\yogasowbamart\controller\LogoutServlet.class
 com\yogasowbamart\model\Order.class
 com\yogasowbamart\controller\DeleteProductServlet.class
 com\yogasowbamart\controller\EditProductFormServlet.class

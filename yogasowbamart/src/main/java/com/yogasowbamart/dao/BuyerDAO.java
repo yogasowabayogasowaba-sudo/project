@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 
 public class BuyerDAO {
     
-    // பையர் ரெஜிஸ்டர் செய்ய டேட்டாபேஸில் சேமிக்க
+
     public boolean registerBuyer(String name, String email, String password) {
         boolean isSuccess = false;
         try {
@@ -27,7 +27,7 @@ public class BuyerDAO {
         return isSuccess;
     }
 
-    // பையர் லாகின் செய்யச் சரிபார்க்க
+   
     public boolean validateBuyer(String email, String password) {
         boolean isValid = false;
         try {
