@@ -30,6 +30,8 @@
         .review-btn:hover { background-color: #0056b3; }
         .back-btn { display: inline-block; margin-top: 20px; padding: 10px 15px; background: #333; color: white; text-decoration: none; border-radius: 4px; }
         .back-btn:hover { background: #555; }
+        .logout-btn { display: inline-block; margin-top: 20px; padding: 10px 15px; background: #dc3545; color: white; text-decoration: none; border-radius: 4px; }
+        .logout-btn:hover { background: #c82333; }
     </style>
 </head>
 <body>
@@ -62,7 +64,7 @@
                         <td><%= order.getOrderDate() %></td>
                         <td><%= order.getStatus() %></td>
                         <td>
-                            <!-- Write Review Button -->
+                            
                             <a href="writeReview.jsp?productId=<%= order.getProductId() %>" class="review-btn">Write Review</a>
                         </td>
                     </tr>
@@ -71,8 +73,11 @@
         </table>
     <% } %>
     
-    <a href="home.html" class="back-btn">Back to Home</a>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <a href="home.html" class="back-btn">Back to Home</a>
+        <a href="BuyerLogoutServlet" class="logout-btn">Logout</a>
+    </div>
 </div>
 
 </body>
-</html>           
+</html>

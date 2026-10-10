@@ -67,7 +67,7 @@
     <div class="login-container">
         <h2>Admin Login</h2>
         
-        <!-- எரர் மெசேஜ் காட்ட -->
+       
         <%
             String error = request.getParameter("error");
             if (error != null) {

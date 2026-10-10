@@ -41,7 +41,7 @@
     <h2>Write Review for Product</h2>
     
     <form action="SubmitReviewServlet" method="POST">
-        <!-- Hidden field to pass productId -->
+        
         <input type="hidden" name="productId" value="<%= productId %>">
         
         <div class="form-group">

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-    // செஷன் சரிபார்த்தல் (அட்மின் லாகின் செய்யாமல் உள்ளே வர முடியாது)
+   
     if (session.getAttribute("adminSession") == null) {
         response.sendRedirect("adminLogin.jsp");
         return;

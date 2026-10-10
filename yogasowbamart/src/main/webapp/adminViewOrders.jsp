@@ -39,7 +39,7 @@
                 Connection con = DBConnection.getConnection();
                 Statement stmt = con.createStatement();
                 
-                // orders டேபிளில் உள்ள சரியான காலம்களைப் பயன்படுத்துதல்
+                
                 String query = "SELECT order_id, buyer_name, product_name, quantity, price, total_amount, order_date, status FROM orders";
                 
                 ResultSet rs = stmt.executeQuery(query);

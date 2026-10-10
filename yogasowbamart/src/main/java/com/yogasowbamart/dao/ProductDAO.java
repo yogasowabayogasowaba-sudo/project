@@ -41,7 +41,7 @@ public class ProductDAO {
         return success;
     }
 
-    // 2. அனைத்து தயாரிப்புகளையும் பெறுதல் (Get All Products)
+   
     public List<Map<String, String>> getAllProducts() {
         List<Map<String, String>> productList = new ArrayList<>();
         try {

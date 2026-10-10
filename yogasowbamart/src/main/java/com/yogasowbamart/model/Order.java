@@ -12,7 +12,7 @@ public class Order {
     private String status;
     private String orderDate;
 
-    // Getters and Setters
+    
     public int getOrderId() {
         return orderId;
     }
@@ -21,11 +21,11 @@ public class Order {
         this.orderId = orderId;
     }
 
-    public int getProductId() { // ProductId க்கான Getter
+    public int getProductId() {
         return productId;
     }
 
-    public void setProductId(int productId) { // ProductId க்கான Setter
+    public void setProductId(int productId) { 
         this.productId = productId;
     }
 
@@ -37,7 +37,7 @@ public class Order {
         this.customerEmail = customerEmail;
     }
 
-    // sellerOrder.jsp க்காக கூடுதல் மேப்பிங் (UserEmail)
+   
     public String getUserEmail() {
         return customerEmail;
     }

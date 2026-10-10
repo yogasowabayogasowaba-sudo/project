@@ -39,7 +39,7 @@
     <div class="success-box">
         <h2>Order Placed Successfully! 🎉</h2>
         <p>Thank you for shopping with us. Your order has been placed successfully.</p>
-        <!-- உங்கள் பிராஜெக்ட்டின் ஹோம் பேஜ் பெயர் index.jsp அல்லது home.jsp-ஐ இங்கு கொடுக்கவும் -->
+        
         <a href="home.html" class="btn">Back to Home</a>
     </div>
 </body>

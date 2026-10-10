@@ -24,7 +24,7 @@
     <h2>Checkout Details</h2>
     
     <form action="OrderSuccessServlet" method="post">
-        <!-- கார்ட்டில் இருந்து தேர்வு செய்யப்பட்ட தயாரிப்புகளை அனுப்ப (Dynamic ஆக வர வேண்டும்) -->
+        
         <%
             String[] products = request.getParameterValues("selectedProducts");
             if (products != null) {

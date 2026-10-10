@@ -213,12 +213,11 @@
         </div>
     </div>
 
-    <!-- Search Bar -->
+    
     <div class="search-container">
         <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search for products (e.g., Shirt, Kurti, Headphones)..." onkeyup="filterProducts()">
     </div>
 
-    <!-- Categories Navigation Bar -->
     <div class="category-bar">
         <button class="category-pill active" onclick="filterCategory('all', this)">All</button>
         <button class="category-pill" onclick="filterCategory('men', this)">👔 Men</button>
@@ -237,7 +236,7 @@
 
         <div class="product-grid" id="productGrid">
             
-            <!-- Men Products -->
+          
             <div class="product-card" data-category="men" data-name="casual shirt">
                 <div class="product-img" style="background:#e0f2fe; color:#0284c7;">Casual Shirt</div>
                 <div class="product-info">
@@ -266,7 +265,7 @@
                 </div>
             </div>
 
-            <!-- Women Products -->
+          
             <div class="product-card" data-category="women" data-name="women's kurti">
                 <div class="product-img" style="background:#fce7f3; color:#db2777;">Women’s Kurti</div>
                 <div class="product-info">
@@ -295,7 +294,7 @@
                 </div>
             </div>
 
-            <!-- Kids Products -->
+          
             <div class="product-card" data-category="kids" data-name="kids t-shirt">
                 <div class="product-img" style="background:#fef9c3; color:#ca8a04;">Kids T-Shirt</div>
                 <div class="product-info">
@@ -310,7 +309,7 @@
                 </div>
             </div>
 
-            <!-- Makeup Products -->
+           
             <div class="product-card" data-category="makeup" data-name="lipstick">
                 <div class="product-img" style="background:#ffe4e6; color:#e11d48;">Lipstick</div>
                 <div class="product-info">
@@ -344,9 +343,9 @@
     </div>
 
     <script>
-        // Category Filter Function
+    
         function filterCategory(category, element) {
-            // Update active pill style
+            
             document.querySelectorAll('.category-pill').forEach(btn => btn.classList.remove('active'));
             element.classList.add('active');
 
@@ -360,7 +359,7 @@
             });
         }
 
-        // Search Bar Filter Function
+        
         function filterProducts() {
             const input = document.getElementById('searchInput').value.toLowerCase();
             const cards = document.querySelectorAll('.product-card');
@@ -375,7 +374,7 @@
             });
         }
 
-        // Success Alert Handler
+    
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('status') === 'success') {
             const alertBox = document.getElementById('alertMessage');
