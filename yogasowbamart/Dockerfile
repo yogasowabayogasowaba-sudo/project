@@ -8,6 +8,9 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
+
+# Railway PORT configuration
 ENV PORT=8080
 EXPOSE 8080
-ENTRYPOINT ["sh", "-c", "java -jar app.jar --server.port=${PORT}"]
+
+CMD ["sh", "-c", "java -Dserver.port=${PORT} -Dport.http=${PORT} -jar app.jar"]
